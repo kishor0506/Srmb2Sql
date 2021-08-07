@@ -26,18 +26,45 @@
 
 
 4.
-CREATE OR REPLACE TRIGGER sat_sun_trigger BEFORE
- INSERT OR UPDATE OR DELETE on myemp 
+=>CREATE OR REPLACE TRIGGER weekend1_trigger 
+BEFORE INSERT OR UPDATE OR DELETE on myemp 
   FOR EACH ROW
   DECLARE
   v_day DATE := TRUNC(SYSDATE);
+  ex_invalid  EXCEPTION; 
   BEGIN
     IF TO_CHAR(v_day,'DY')IN ('SAT','SUN') THEN
-      dbms_output.put_line('Sorry Access on week-end days is denied');
+       RAISE ex_invalid;
     END IF;
-  END; 
+    EXCEPTION 
+    WHEN ex_invalid THEN 
+      RAISE_APPLICATION_ERROR(-20001,'Sorry Access on week-end days is denied');
+  END;
 
-insert into myemp values(100,'kishor',123,15000,3,00);
+5.
+=>
+DECLARE 
+   s_id student.stu_id%type := &dd_id; 
+   -- user defined exception 
+   ex_invalid_id  EXCEPTION; 
+BEGIN 
+   IF s_id <= 0 THEN 
+      RAISE ex_invalid_id; 
+   ELSE 
+      SELECT stu_id into s_id from student
+   WHERE  stu_id=s_id; 
+   DBMS_OUTPUT.PUT_LINE ('Stu id: '|| s_id);
+   END IF; 
+
+EXCEPTION 
+   WHEN ex_invalid_id THEN 
+      RAISE_APPLICATION_ERROR(-20001,'Stu id must be > 0');
+   WHEN no_data_found THEN 
+     RAISE_APPLICATION_ERROR(-20002,'No such record');
+   WHEN others THEN 
+     dbms_output.put_line('Error!'); 
+END; 
+/
 
 6.
 =>CREATE TABLE ebill( cno varchar2(10) primary key,cname varchar2(30) NOT NULL,nounits number(4) NOT NULL,bamt number(8,2) )

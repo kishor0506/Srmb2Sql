@@ -1,0 +1,56 @@
+1.
+=>create table myemp(Eno number(6) PRIMARY KEY,Ename varchar2(30) NOT NULL,Deptno number(4) NOT NULL,Esal number(8,2));
+
+=>alter table myemp add experience number(2) NOT  NULL;
+
+
+=>insert all
+    into myemp(Eno,Ename,Deptno,Esal,experience) values(100,'kishor',123,15000,3)
+    into myemp(Eno,Ename,Deptno,Esal,experience) values(102,'loki',346,5000,1)
+    into myemp(Eno,Ename,Deptno,Esal,experience) values(101,'srinath',456,10000,2)
+    into myemp(Eno,Ename,Deptno,Esal,experience) values(105,'gokul',895,14000,2)
+    into myemp(Eno,Ename,Deptno,Esal,experience) values(106,'tamil',256,16000,3)
+    select * from dual;
+
+
+=>alter table myemp add experience number(2) NOT  NULL;
+
+=>update myemp set Esal=null where Esal >=5000 and Esal <=10000;
+
+
+2.
+=>  ALTER TABLE myemp ADD comm number(3) default null;
+    update myemp set comm=01 where Eno=100;
+    update myemp set comm=02 where Eno=102;
+    create table empcommmnull as (select eno,ename,comm from myemp where comm IS NULL)
+
+
+4.
+CREATE OR REPLACE TRIGGER sat_sun_trigger BEFORE
+ INSERT OR UPDATE OR DELETE on myemp 
+  FOR EACH ROW
+  DECLARE
+  v_day DATE := TRUNC(SYSDATE);
+  BEGIN
+    IF TO_CHAR(v_day,'DY')IN ('SAT','SUN') THEN
+      dbms_output.put_line('Sorry Access on week-end days is denied');
+    END IF;
+  END; 
+
+insert into myemp values(100,'kishor',123,15000,3,00);
+
+6.
+=>CREATE TABLE ebill( cno varchar2(10) primary key,cname varchar2(30) NOT NULL,nounits number(4) NOT NULL,bamt number(8,2) )
+/
+
+desc ebill;
+
+INSERT ALL
+         INTO ebill (cno, cname,nounits,bamt) VALUES ('10', 'tamil', 12,'')
+          INTO ebill (cno, cname,nounits,bamt) VALUES ('11', 'niranjan', 22,'')
+          INTO ebill (cno, cname,nounits,bamt) VALUES ('12', 'harish', 30,'')
+          INTO ebill (cno, cname,nounits,bamt) VALUES ('13', 'vijay', 14,'')
+          INTO ebill (cno, cname,nounits,bamt) VALUES ('14', 'ram', 15,'')
+      SELECT * FROM dual
+
+select * from ebill;
